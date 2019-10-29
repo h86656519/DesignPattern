@@ -9,12 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.designpattern.Model.MainModel;
 import com.example.designpattern.Presenter.MainPresenter;
-import com.example.designpattern.R;
 import com.example.designpattern.View.MainView;
 
 
@@ -23,13 +21,33 @@ import com.example.designpattern.View.MainView;
 public class MainActivity extends AppCompatActivity implements MainView {
     private MainPresenter mainPresenter;
     private EditText editaccount, editpass;
+    boolean result = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainPresenter = new MainPresenter(this,new MainModel());
+        mainPresenter = new MainPresenter(this, new MainModel());
         mainPresenter.onCreate();
 
+        getlonginViewByid().setEnabled(result); //初始button
+        getemailViewByid().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String input = getemailViewByid().getText().toString().trim();
+                getlonginViewByid().setEnabled(!input.isEmpty());
+                Log.i("V", "onTextChanged input : " + input);
+                Log.i("V", "onTextChanged result : " + result);
+                Log.i("V", "onTextChanged s.toString() : " + s.toString());
+                mainPresenter.isEmpty(s.toString());
+                getlonginViewByid().setEnabled(result);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
     }
 
     @Override
@@ -37,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         Log.d("V", "clearEdittext: ");
         getaccountViewById().setText("");
         getpassViewByid().setText("");
+        getemailViewByid().setText("");
     }
 
     @Override
@@ -52,16 +71,17 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void setbuttonEnabled(boolean result) {
-        mainPresenter.inputListiner(getaccountViewById(), getpassViewByid(),getemailViewByid(),getlonginViewByid());
-//        getaccountViewById().addTextChangedListener(loginTextWatcher);
-//        getpassViewByid().addTextChangedListener(loginTextWatcher);
-//        getemailViewByid().addTextChangedListener(loginTextWatcher);
-        Log.i("V", "setbuttonEnabled result : " + "result") ;
-        getlonginViewByid().setEnabled(result);
+       // mainPresenter.inputListiner(getaccountViewById(), getpassViewByid(), getemailViewByid(), getlonginViewByid());
+//        getaccountViewById().addTextChangedListener(inputListiner(getaccountViewById()));
+//        getpassViewByid().addTextChangedListener(inputListiner(getpassViewByid()));
+//        getemailViewByid().addTextChangedListener(inputListiner(getemailViewByid()));
+
+        Log.i("V", "setbuttonEnabled result : " + result);
+        this.result = result;
     }
 
     public void btn_login(View view) {
-        mainPresenter.onloginclick(getaccountViewById().getText().toString(), getpassViewByid().getText().toString(),getemailViewByid().getText().toString());
+        mainPresenter.onloginclick(getaccountViewById().getText().toString(), getpassViewByid().getText().toString(), getemailViewByid().getText().toString());
     }
 
     private EditText getaccountViewById() {
@@ -76,9 +96,27 @@ public class MainActivity extends AppCompatActivity implements MainView {
         return findViewById(R.id.editText3);
     }
 
-    private Button getlonginViewByid(){
+    private Button getlonginViewByid() {
         return findViewById(R.id.btn_login);
     }
 
+    public TextWatcher inputListiner(final EditText editText) {
+        TextWatcher loginTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String input = editText.getText().toString().trim();
+                getlonginViewByid().setEnabled(!input.isEmpty());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
+        return loginTextWatcher;
+    }
 }

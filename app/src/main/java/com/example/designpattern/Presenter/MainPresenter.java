@@ -1,7 +1,6 @@
 package com.example.designpattern.Presenter;
 
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -35,6 +34,10 @@ public class MainPresenter {
     public void inputListiner(EditText editTextUsername, EditText editTextPassword, EditText editTextMail, Button buttonlogin) {
 //        mainView.setbuttonEnabled(mainModel.inputListiner(editTextUsername, editTextPassword, editTextMail, buttonlogin));
         mainView.setbuttonEnabled(mainModel.inputListiner2(editTextUsername, editTextPassword, editTextMail, buttonlogin));
+    }
+    public void isEmpty(String s){
+        mainView.setbuttonEnabled(mainModel.isEmpty(s));
+
     }
 
 }

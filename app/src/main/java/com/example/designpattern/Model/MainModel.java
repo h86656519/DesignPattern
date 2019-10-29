@@ -103,4 +103,13 @@ public class MainModel {
         };
         return result;
     }
+
+    public boolean isEmpty(String s){
+        if (s.length() > 0){
+            return true;
+        }else {
+            return false;
+        }
+
+    }
 }
